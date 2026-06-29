@@ -2,3 +2,7 @@
 *.o
 .vscode/
 build/
+nanoquant/
+*.bin
+__pycache__/
+
