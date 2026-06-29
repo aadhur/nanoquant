@@ -1,0 +1,3 @@
+https://michalpitr.substack.com/p/optimizing-matrix-multiplication
+
+"Llama2.c" by Andrej Karpathy
