@@ -15,7 +15,7 @@ typedef struct tensor {
 } tensor;
 
 tensor tensor_create( int* shape, int ndims);
-tensor tensor_load(const char* filepath);
+tensor tensor_load(const char* filepath, int ndims, int *shape);
 void tensor_free(tensor* T);
 float tensor_get(tensor* T, int* indices);
 void tensor_set(tensor* T, int* indices, float val);
