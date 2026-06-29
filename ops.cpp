@@ -46,7 +46,6 @@ void softmax(tensor* T) {
     }
     float sum = 0;
     // step 2 - exp each element and sum
-    float sum = 0;
     for (int i = 0; i < T->size; i++) {
         T->data[i] = exp(T->data[i] - max); 
         sum += T->data[i];
@@ -57,4 +56,13 @@ void softmax(tensor* T) {
         T->data[i] = T->data[i] / sum;
     }
 
+}
+
+void add_bias(tensor* T, tensor* bias) {
+    for (int i = 0; i < T->shape[0]; i++) {
+        for (int j = 0; j < T->shape[1]; j++) {
+            int flat = i * T->shape[1] + j;
+            T->data[flat] += bias->data[j];
+        }
+    }
 }

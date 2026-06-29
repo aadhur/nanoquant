@@ -17,26 +17,28 @@ model = nn.Sequential(
 
 # train
 optimizer = torch.optim.Adam(model.parameters())
-loss_fn = nn.CrossEntropyLoss()
+loss_fn = nn.CrossEntropyLoss() #loss function
 
 for epoch in range(3):
     correct = 0
     total = 0
     for images, labels in train_loader:
-        images = images.view(-1, 784)
-        outputs = model(images)
-        loss = loss_fn(outputs, labels)
+        images = images.view(-1, 784) #flatten the image 
+        outputs = model(images) #model output 
+        loss = loss_fn(outputs, labels) #loss calc
+        #backprop -----
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
+        #---------------
         correct += (outputs.argmax(1) == labels).sum().item()
         total += labels.size(0)
     print(f"epoch {epoch+1} accuracy: {correct/total*100:.1f}%")
 
 # save weights and biases
-model[0].weight.detach().numpy().tofile("w1.bin")
+model[0].weight.detach().numpy().T.tofile("w1.bin")
+model[2].weight.detach().numpy().T.tofile("w2.bin")
 model[0].bias.detach().numpy().tofile("b1.bin")
-model[2].weight.detach().numpy().tofile("w2.bin")
 model[2].bias.detach().numpy().tofile("b2.bin")
 
 # save one test image to run inference on
