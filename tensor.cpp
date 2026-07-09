@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <cstring>
+#include <stdint.h>
 
 tensor tensor_create(int* shape, int ndims) {
     tensor t;
@@ -20,11 +21,34 @@ tensor tensor_create(int* shape, int ndims) {
 
 }
 
+qtensor qtensor_create(int* shape, int ndims) {
+    qtensor t;
+    t.ndims = ndims; 
+    t.shape = (int*)malloc(ndims * sizeof(int)); //creating a shape 'box' (heap memory) to avoid dangling pointer
+
+    memcpy(t.shape, shape, ndims*sizeof(int)); //values copied, not address perma
+
+    t.size = 1;
+    for (int i=0;i< ndims;i++) {
+        t.size*=shape[i];
+    }
+    t.data = (int8_t*)malloc(t.size * sizeof(int8_t)); //heap memory for data for the entire flat array
+    return t;
+
+}
+
 void tensor_free(tensor* T) {
     free(T -> shape);
     free(T -> data);
     T-> shape = NULL;
     T-> data = NULL; //both set to NULL so T knows it's free
+}
+
+void qtensor_free(qtensor* T) {
+    free(T->data);
+    free(T->shape);
+    T-> shape = NULL;
+    T-> data = NULL;
 }
 
 float tensor_get(tensor* T, int* indices) {

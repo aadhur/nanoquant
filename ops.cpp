@@ -66,3 +66,15 @@ void add_bias(tensor* T, tensor* bias) {
         }
     }
 }
+
+void update_minmax(tensor* T, float& min, float& max) {
+    for (int i=0; i<T->size; i++) {
+        float v = T->data[i];
+        if (v > max) {
+            max = v;
+        }
+        if (v < min) {
+            min = v;
+        }
+    }
+}

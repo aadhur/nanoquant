@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 from torchvision import datasets, transforms
 import numpy as np
+import os
 
 # load mnist
 transform = transforms.ToTensor()
@@ -14,6 +15,7 @@ model = nn.Sequential(
     nn.ReLU(),
     nn.Linear(128, 10)
 )
+
 
 # train
 optimizer = torch.optim.Adam(model.parameters())
@@ -43,8 +45,19 @@ model[2].bias.detach().numpy().tofile("b2.bin")
 
 # save one test image to run inference on
 test_data = datasets.MNIST('./data', train=False, download=True, transform=transform)
-image, label = test_data[0]
-image.view(-1).numpy().tofile("image.bin")
-print(f"saved test image, actual digit is: {label}")
 
-print("done")
+os.makedirs("calib_images", exist_ok=True)
+
+
+labels = []
+for i in range(100,300):
+    image, label = test_data[i]
+    image.view(-1).numpy().tofile(f"calib_images/image_{i}.bin")
+    labels.append(label)
+
+# save labels so your C++ harness (or a python checker) can verify predictions later
+with open("calib_images/labels.txt", "w") as f:
+    for i, l in enumerate(labels):
+        f.write(f"image_{i}.bin {l}\n")
+
+print(f"saved {len(labels)} calibration images")
